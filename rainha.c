@@ -44,23 +44,26 @@ void show(int** matrix){
     }
 }
 
-int checkLine(int* line){
-    for(int i = 0; i < COLUMN; i++){
-        if(line[i] == 1) return 0;
+int checkLine(int** matrix, int line_pos){
+    for(int k = 0; k < COLUMN; k++){
+        if(matrix[line_pos][k] == 8){
+            return 0;
+        }
+    }
+    for(int k = 0; k < COLUMN; k++){
+        matrix[line_pos][k] = 1;
     }
     return 1;
 }
 
-int checkColumn(int* column){
-    for(int i = 0; i < LINE; i++){
-        if(column[i] == 1) return 0;
+int checkColumn(int** matrix, int column_pos){
+    for(int k = 0; k < LINE; k++){
+        if(matrix[k][column_pos] == 8){
+            return 0;
+        }
     }
-    return 1;
-}
-
-int checkDiagonal(int* diagonal, int size){
-    for(int i = 0; i < size; i++){
-        if(diagonal[i] == 1) return 0;
+    for(int k = 0; k < LINE; k++){
+        matrix[k][column_pos] = 1;
     }
     return 1;
 }
@@ -69,6 +72,80 @@ int main(){
     srand(time(NULL));
     int** matrix = createMatrix();
     printf("Normal matrix: %s", bar);
+    show(matrix);
+    for(int t = 0; t < LINE * COLUMN; t++){
+        int* vet = addPosXandY();
+        int checkA = 0;
+        int checkB = 0;
+        int checkC = 0;
+        int checkD = 0;
+
+        int x = vet[0], y = vet[1], m = x, n = y, o = x, p = y, e = x, r = y;
+
+        int original_x = x;
+        int original_y = y;
+        // fill up ++ diagonal and -- diagonal
+        for(int g = 0; g < LINE; g++){
+            for(int k = 0; k < COLUMN; k++){
+                if(g == (x + 1) && k == (y + 1)  && matrix[g][k] != 8){
+                    if(matrix[g][k] == 8){
+                            checkC = 0;
+                            break;
+                        }else{
+                            checkC = 1;
+                        }
+                    x++; y++;
+                   
+                }else{
+                    if(g == (m - 1) && k == (n - 1) && m > 0 && n > 0 && matrix[g][k] != 8){
+                        if(matrix[g][k] == 8){
+                            checkD = 0;
+                            break;
+                        }else{
+                            checkD = 1;
+                        }
+                        m--; n--;
+                        
+                    }
+                }
+            }
+        }
+        // fill up +- diagonal and -+ diagonal
+        for(int g = 0; g < LINE; g++){
+            for(int k = 0; k < COLUMN; k++){
+                if(g == (o + 1) && k == (p - 1) && p > 0 && o < LINE && matrix[g][k] != 8){
+                    if(matrix[g][k] == 8){
+                        checkA = 0;
+                        break;
+                    }else{
+                        checkA = 1;
+                    }
+                    o++; p--;
+                    
+                }else{
+                    if(g == (e - 1) && k == (r + 1) && e > 0 && r < LINE  && matrix[g][k] != 8){
+                        if(matrix[g][k] == 8){
+                            checkB = 0;
+                            break;
+                        }else{
+                            checkB = 1;
+                        }
+                        e--; r++;
+                        
+                    }
+                }
+            }
+        } 
+        if(checkLine(matrix, original_x) && checkA && checkB && checkC && checkD && checkColumn(matrix, original_y)){
+            matrix[original_x][original_y] = 8;
+        }
+        checkA = 0;
+        checkB = 0;
+        checkC = 0;
+        checkD = 0;
+
+    }
+    printf(bar);
     show(matrix);
     return 0;
 }
