@@ -5,6 +5,8 @@ import "fmt"
 const LINE int = 8
 const COLUMN int = 8
 
+var heuristics = make(map[string]int)
+
 func createMatrix(matrix *[][]int) {
 	for i := 0; i < COLUMN; i++ {
 		(*matrix)[i] = make([]int, COLUMN)
@@ -95,7 +97,22 @@ func checkDiagonal(matrix *[][]int, posX, posY int) {
 		}
 
 	}
+	checkHeuristics(matrix, posX, posY)
+}
+
+func checkHeuristics(matrix *[][]int, posX, posY int) {
+	counter := 0
+	for i := 0; i < LINE; i++ {
+		for j := 0; j < COLUMN; j++ {
+			if (*matrix)[i][j] == 0 {
+				counter++
+			}
+		}
+	}
+	heuristics[fmt.Sprintf("%d+%d", posX, posY)] = counter
 	printMatrix(matrix)
+	fmt.Println("Heuristics ", heuristics)
+
 }
 
 func main() {
