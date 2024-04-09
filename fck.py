@@ -8,7 +8,7 @@ def get_neighbors(node, map):
     for i in range(4):
         nx = node[0] + dx[i]
         ny = node[1] + dy[i]
-        if 0 <= nx < len(map) and 0 <= ny < len(map[0]) and map[nx][ny] != 'X' and map[nx][ny] != "I":
+        if 0 <= nx < len(map) and 0 <= ny < len(map[0]) and map[nx][ny] != '🚫' and map[nx][ny] != '🦁':
             neighbors.append((nx, ny))
     return neighbors
 
@@ -39,11 +39,12 @@ def a_star(map, start, target):
 
         for neighbor_pos in get_neighbors((current_node[0], current_node[1]), map):
             neighbor_node = (
-            neighbor_pos[0], neighbor_pos[1], current_node[2] + 1, heuristic(neighbor_pos, target), current_node)
+                neighbor_pos[0], neighbor_pos[1], current_node[2] + 1, heuristic(neighbor_pos, target), current_node)
             if (neighbor_node[0], neighbor_node[1]) in closed_list:
                 continue
             if neighbor_node not in open_list:
-                heapq.heappush(open_list, (neighbor_node[2] + neighbor_node[3], neighbor_node))
+                heapq.heappush(
+                    open_list, (neighbor_node[2] + neighbor_node[3], neighbor_node))
 
     return None
 
@@ -60,15 +61,15 @@ def printMatrix():
 def clear_blocks():
     for r in range(len(map)):
         for k in range(len(map[0])):
-            if map[r][k] == 'X':
-                map[r][k] = '_'
+            if map[r][k] == '🚫':
+                map[r][k] = '🟩'
 
 
 map = [
-    ['X', 'P' ,'_' ,'F', '_'],
-    ['X','_',  '_' ,'_','I'],
-    ['_' , '_' ,'X', '_', '_'],
-    ['_','X','_','_', 'O']
+    ['🚫', '🦆', '🟩', '🍎', '🟩'],
+    ['🚫', '🟩', '🟩', '🟩', '🦁'],
+    ['🟩', '🟩', '🚫', '🟩', '🟩'],
+    ['🟩', '🚫', '🟩', '🟩', '🏁']
 ]
 
 start = (0, 1)
@@ -78,8 +79,7 @@ enemy = (1, 4)
 path = a_star(map, start, target)
 
 if path:
-    print("Caminho encontrado:")
-    print(path)
+    print(f'Caminho encontrado: {path}')
     a = None
     b = None
     up_enemy = True
@@ -88,24 +88,25 @@ if path:
             if (r, k) in path:
                 if up_enemy:
                     up_enemy = False
-                    map[enemy[0]-1][enemy[1]] = 'I'
-                    map[enemy[0]][enemy[1]] = '_'
+                    map[enemy[0]-1][enemy[1]] = '🦁'
+                    map[enemy[0]][enemy[1]] = '🟩'
                 else:
                     up_enemy = True
-                    map[enemy[0] - 1][enemy[1]] = '_'
-                    map[enemy[0]][enemy[1]] = 'I'
+                    map[enemy[0] - 1][enemy[1]] = '🟩'
+                    map[enemy[0]][enemy[1]] = '🦁'
                 path = a_star(map, start, target)
                 if a is not None:
-                    map[a][b] = '*'
-                if map[r][k] == 'F':
-                    print("Conseguiu bonus")
+                    map[a][b] = '👣'
+                if map[r][k] == '🍎':
+                    print('Conseguiu bonus 🍎')
                     clear_blocks()
-                    path = a_star(map, (r, k), target)
-                map[r][k] = 'P'
+                    current_pos = (r, k)
+                    path = a_star(map, current_pos, target)
+                    print(f'Novo caminho encontrado: {path}')
+                map[r][k] = '🦆'
                 a = r
                 b = k
                 printMatrix()
-
         print()
 else:
-    print("Não há caminho encontrado.")
+    print('Não há caminho encontrado.')
