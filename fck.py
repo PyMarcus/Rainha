@@ -100,7 +100,7 @@ if path:
                 if map[r][k] == 'F':
                     print("Conseguiu bonus")
                     clear_blocks()
-                    path = a_star(map, start, target)
+                    path = a_star(map, (r, k), target)
                 map[r][k] = 'P'
                 a = r
                 b = k
