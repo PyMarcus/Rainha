@@ -65,7 +65,8 @@ d.H = 4
 
 # até ter algo na lista aberta
 while lista_aberta:
-    no_atual = lista_aberta.pop()
+    no_atual = lista_aberta.pop(0)
+    print(no_atual)
     
     # verifica se o no atual é o destino
     if no_atual.nome == "f":
@@ -82,11 +83,10 @@ while lista_aberta:
     no_atual.vizinhos = sorted(no_atual.vizinhos, key=lambda x: x.F)
     # adiciona os vizinhos a lista aberta
     for vizinho in no_atual.vizinhos:
-        if vizinho not in lista_aberta and vizinho not in lista_fechada:
+        if vizinho not in lista_aberta and vizinho not in lista_fechada and vizinho.nome != "block":
             lista_aberta.append(vizinho)
     # adiciona o no atual a lista fechada
     lista_fechada.append(no_atual)
     # no atual é o de menor F 
-    no_atual = no_atual.vizinhos[0]
+    lista_aberta = sorted(lista_aberta, key=lambda x: x.F)
     mostraMapa()
-  
